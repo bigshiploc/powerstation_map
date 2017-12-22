@@ -1,0 +1,153 @@
+p, input, div, button {
+    font-size: 0.28rem;
+}
+
+h3 {
+    font-size: 0.33rem;
+}
+
+.prompt,
+.button-container,
+.popover-container,
+.radio-container,
+.coord-search-container {
+    position: absolute;
+    left: 2%;
+    bottom: 2%;
+    z-index: 1;
+}
+
+.prompt {
+    padding: 0.2rem;
+    border-radius: 0.12rem;
+    background: rgba(255, 255, 255, .5);
+    max-height: 3rem;
+    overflow-y: scroll;
+    cursor: default;
+    user-select: none;
+}
+
+.prompt::-webkit-scrollbar {
+    display: none;
+}
+
+.btn {
+    font-size: 0.28rem;
+    text-align: center;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    border-radius: 0.08rem;
+    padding: 0.1rem;
+    margin-bottom: 0.2rem;
+    display: block;
+}
+
+.btn:hover {
+    background-color: #e6e6e6;
+}
+
+.popover-container {
+    bottom: inherit;
+    top: 2%;
+    left: 2%;
+}
+
+.popover-button {
+    text-align: center;
+    z-index: 1;
+}
+
+.popover-button span:last-child {
+    display: inline-block;
+    border: 0 solid #fff;
+    border-width: 0.1rem 0.1rem 0;
+    border-color: #000 #fff ;
+    width: 0;
+    overflow: hidden;
+    height: 0;
+}
+
+.popover {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1;
+    display: none;
+    padding: 0.1rem 0;
+    margin: 0.04rem 0 0;
+    background: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 0.08rem;
+    box-shadow: 0 0.12rem 0.24rem rgba(0,0,0,.175);
+    min-width: 2.4rem;
+}
+
+.popover div {
+    user-select: none;
+    padding: 0.1rem 0 0 0.1rem;
+    font-size: 0.28rem;
+}
+
+.popover div:first-child {
+    border-bottom: 1px solid #cccccc;
+    padding: 0 0 0.1rem 0.1rem;
+}
+
+.search-container {
+    position: absolute;
+    box-sizing: border-box;
+    width: 100%;
+    top: 0.2rem;
+    padding: 0 0.2rem;
+    z-index: 1;
+}
+
+.search-container input{
+    position: relative;
+    width: 100%;
+}
+
+.search-result {
+    width: 100%;
+    border-radius: 0.08rem;
+    margin-top: 0.2rem;
+    max-height: 10rem;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.search-result.hided {
+    display: none;
+}
+
+.search-result .item {
+    padding: 0.2rem 0 0.2rem 0.2rem;
+    background-color: #fff;
+    border-bottom: 1PX solid #DCE2EE;
+}
+
+.item .display {
+    font-size: 0.3rem;
+}
+
+.item .display b {
+    color: #64B5F6;
+}
+
+.item .desc {
+    font-size: 0.26rem;
+    color: #9098B8;
+}
+
+.pointer-text {
+    cursor: pointer;
+}
+
+.radio-container span {
+    font-size: 0.54rem;
+}
+
+.category-radio {
+    width: 0.52rem;
+    height: 0.52rem;
+}

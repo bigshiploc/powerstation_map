@@ -1,0 +1,331 @@
+{
+  "default": {
+    "Frame": {
+      "renderer": {
+        "type": "simple",
+        "style": {
+          "type": "Polygon",
+          "light": true,
+          "face": {
+            "height": -0.5,
+            "color": "0xF9F9F9"
+          },
+          "bevelEnabled": true,
+          "bevelSize": 1
+        }
+      }
+    },
+    "Area": {
+      "renderer": {
+        "type": "unique",
+        "keys": [
+          "category"
+        ],
+        "default": {
+          "type": "Polygon",
+          "light": true,
+          "polygonMerge": true,
+          "face": {
+            "height": 1.5,
+            "lineHeight": 1.52,
+            "color": "0xE5E3FC"
+          },
+          "outline": {
+            "color": "0xB7B5C9"
+          }
+        },
+        "styles": {
+          "1(0|1)\\d{6}" : {"type": "Polygon","face": {"color": "0xA7D4EA"},"outline": {"color": "0x83A7B8"}},
+
+          "120\\d{2}000" : {"type": "Polygon","face": {"color": "0xE5E3FC"},"outline": {"color": "0xB7B5C9"}},
+          "13000000" : {"type": "Polygon","face": {"color": "0xE5E3FC"},"outline": {"color": "0xB7B5C9"}},
+
+          "1300[3|4|7]000" : {"type": "Polygon","face": {"color": "0x88B8F2"},"outline": {"color": "0x6B91BF"}},
+
+          "1300[1-2|5-6|8-9]00//d" : {"type": "Polygon","face": {"color": "0x8FBBEF"},"outline": {"color": "0x80A7D6"}},
+          "130[1-9]\\d00\\d" : {"type": "Polygon","face": {"color": "0x8FBBEF"},"outline": {"color": "0x80A7D6"}},
+          "131[0-4]\\d{4}" : {"type": "Polygon","face": {"color": "0x8FBBEF"},"outline": {"color": "0x80A7D6"}},
+
+          "131[5-7]\\d{4}" : {"type": "Polygon","face": {"color": "0x8FBBEF"},"outline": {"color": "0x80A7D6"}},
+
+          "1[4-5]\\d{6}" : {"type": "Polygon","face": {"color": "0xC8E1FF"},"outline": {"color": "0x8D9DB2"}},
+
+          "1[6-8]\\d{6}" : {"type": "Polygon","face": {"color": "0x9CC5D3"},"outline": {"color": "0x7796A1"}},
+          "2(0|1)\\d{6}" : {"type": "Polygon","face": {"color": "0x9CC5D3"},"outline": {"color": "0x7796A1"}},
+
+          "2300600" : {"type": "Polygon","face": {"color": "0xE9F0F3"},"outline": {"color": "0xE9F0F3"}},
+
+          "22\\d{6}" : {"type": "Polygon","face": {"color": "0xC8E1FF"},"outline": {"color": "0x8D9DB2"}},
+          "2300[0-5|7-8]\\d{3}" : {"type": "Polygon","face": {"color": "0xC8E1FF"},"outline": {"color": "0x8D9DB2"}},
+          "2301\\d{4}" : {"type": "Polygon","face": {"color": "0xC8E1FF"},"outline": {"color": "0x8D9DB2"}},
+          "2302[0-1]\\d{3}" : {"type": "Polygon","face": {"color": "0xC8E1FF"},"outline": {"color": "0x8D9DB2"}},
+
+          "2300900" : {"type": "Polygon","face": {"height": 0.15, "lineHeight": 0.17, "color": "0x9CC5D3"},"outline": {"color": "0x7796A1"}},
+          "2302[2-9]\\d{3}" : {"type": "Polygon","face": {"height": 0.15, "lineHeight": 0.17, "color": "0x9CC5D3"},"outline": {"color": "0x7796A1"}},
+          "230[3-6]\\d{4}" : {"type": "Polygon","face": {"height": 0.15, "lineHeight": 0.17, "color": "0x9CC5D3"},"outline": {"color": "0x7796A1"}},
+
+          "2399900" : {"type": "Polygon","face": {"color": "0xD3D6D7"},"outline": {"color": "0xA0A0A0"}},
+
+          "24\\d{6}" : {"type": "Polygon","face": {"height": 0.15, "lineHeight": 0.17, "color": "0xB0EACD"},"outline": {"color": "0x8AB8A1"}},
+
+          "3\\d{7}" : {"type": "Polygon","face": {"color": "0xE2C4F7"},"outline": {"color": "0xB39CC4"}}
+        }
+      }
+    },
+    "AreaText": {
+      "renderer": {
+        "type": "simple",
+        "style": {
+          "type": "Annotation",
+          "color": "0x606060",
+          "font": "32px -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Ubuntu, \"Microsoft Yahei\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", \"Hiragino Kaku Gothic Pro\", Meiryo, \"Malgun Gothic\", \"Helvetica Neue\", Helvetica, sans-serif",
+          "outlineWidth": 3,
+          "outlineColor": "0xffffff",
+          "field": "display",
+          "anchor": [0.5, 1],
+          "collision": true,
+          "depthTest": true,
+          "z": 1.52,
+          "margin": 0,
+          "anchorAuto": true,
+          "anchorStyle": {
+            "type": "Icon",
+            "serverUrl": "https://api.ipalmap.com/logo/64/",
+            "field": "logo",
+            "width": 20,
+            "height": 20,
+            "depthTest": true,
+            "anchor": [0.5, 1],
+            "z": 1.52
+          }
+        }
+      }
+    },
+    "Facility": {
+      "renderer": {
+        "type": "unique",
+        "keys": [
+          "category"
+        ],
+        "default": {
+          "type": "Icon",
+          "serverUrl": "https://api.ipalmap.com/logo/64/",
+          "field": "logo",
+          "anchor": [0.5, 1],
+          "width": 25,
+          "height": 25,
+          "collision": true,
+          "depthTest": true,
+          "z": 1.52,
+          "margin": 0
+        },
+        "styles": {
+        }
+      }
+    },
+    "navi": {
+      "renderer": {
+        "type": "simple",
+        "style": {
+          "type": "LineString",
+          "color": "0xffffff",
+          "texture": "../assets/dashLine.png",
+          "width": 1
+        }
+      }
+    },
+    "startMarker": {
+      "renderer": {
+        "type": "simple",
+        "style": {
+          "type": "Icon",
+          "texture": "../assets/marker_start@2x.png",
+          "anchor": [0.5, 1],
+          "width": 60,
+          "height": 74,
+          "collision": false,
+          "depthTest": true,
+          "z": 1.52
+        }
+      }
+    },
+    "endMarker": {
+      "renderer": {
+        "type": "simple",
+        "style": {
+          "type": "Icon",
+          "texture": "../assets/marker_end@2x.png",
+          "anchor": [0.5, 1],
+          "width": 60,
+          "height": 74,
+          "collision": false,
+          "depthTest": true,
+          "z": 1.52
+        }
+      }
+    },
+    "pickMarker": {
+      "renderer": {
+        "type": "simple",
+        "style": {
+          "type": "Icon",
+          "texture": "./resources/images/marker_icon@2x.png",
+          "anchor": [0.5, 1],
+          "width": 19,
+          "height": 32,
+          "collision": false,
+          "depthTest": true,
+          "z": 1.52
+        }
+      }
+    },
+    "light": {
+      "renderer": {
+        "type": "simple",
+        "style": {
+          "type": "Light",
+          "lightType": "HemisphereLight",
+          "intensity": 1.1,
+          "color": "0xffffff",
+          "options": {
+            "groudColor": "0x5A5A5A"
+          }
+        }
+      }
+    },
+    "model": {
+      "renderer": {
+        "type": "simple",
+        "style": {
+          "type": "Model",
+          "path": "../assets/fireman.obj",
+          "rotate": [1.57, 0, 0],
+          "scale": [5, 5, 5],
+          "params": {
+            "mtl": "../assets/fireman.mtl"
+          }
+        }
+      }
+    },
+    "locMarker": {
+      "renderer": {
+        "type": "simple",
+        "style": {
+          "type": "Icon",
+          "plane": true,
+          "texture": "../assets/marker_location.png",
+          "width": 10,
+          "height": 10
+        }
+      }
+    },
+    "LineString": {
+      "renderer": {
+        "type": "simple",
+        "style": {
+          "type": "LineString",
+          "color": "0xff0000",
+          "width": 1.5
+        }
+      }
+    },
+    "sphere": {
+      "renderer": {
+        "type": "simple",
+        "style": {
+          "type": "Sphere",
+          "radius": 1.5,
+          "color": "0xff0000"
+        }
+      }
+    },
+    "triangle": {
+      "renderer": {
+        "type": "simple",
+        "style": {
+          "type": "Polygon",
+          "light": true,
+          "polygonMerge": false,
+          "face": {
+            "height": 3,
+            "color": "0xff0000"
+          },
+          "outline": {
+            "color": "0xB7B5C9"
+          }
+        }
+      }
+    },
+    "marker": {
+      "renderer": {
+        "type": "simple",
+        "style": {
+          "type": "Icon",
+          "texture": "../assets/marker_location.png",
+          "width": 32,
+          "height": 32,
+          "collision": false,
+          "depthTest": false
+        }
+      }
+    },
+    "searchMarker": {
+      "renderer": {
+        "type": "simple",
+        "style": {
+          "type": "Icon",
+          "texture": "../assets/search_marker.png",
+          "anchor": [0.5, 1],
+          "width": 60,
+          "height": 94,
+          "collision": false,
+          "depthTest": false
+        }
+      }
+    },
+    "constrainedSphere": {
+      "renderer": {
+        "type": "simple",
+        "style": {
+          "type": "Sphere",
+          "radius": 1,
+          "color": "0x00ff00"
+        }
+      }
+    },
+    "rawSphere": {
+      "renderer": {
+        "type": "simple",
+        "style": {
+          "type": "Sphere",
+          "radius": 1,
+          "color": "0xff0000"
+        }
+      }
+    },
+    "mockLocMarker": {
+      "renderer": {
+        "type": "simple",
+        "style": {
+          "type": "Icon",
+          "plane": true,
+          "texture": "../assets/position_point.png",
+          "width": 5,
+          "height": 5
+        }
+      }
+    },
+    "mockSensorMarker": {
+      "renderer": {
+        "type": "simple",
+        "style": {
+          "type": "Icon",
+          "plane": true,
+          "texture": "../assets/position_point.png",
+          "width": 10,
+          "height": 10
+        }
+      }
+    }
+  }
+}
