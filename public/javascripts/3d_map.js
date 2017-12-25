@@ -15,6 +15,7 @@
 
     var AddOverlay;
     var FloorControl;
+    var buttons = document.getElementsByClassName('btn');
 
     //绘制标志的方法
     function addOverlay() {
@@ -68,9 +69,11 @@
     function tryAddOverlay() {
         try {
             addOverlay();
+            set2dMap();
         } catch (err) {
             AddOverlay = setInterval(function () {
                 addOverlay();
+                set2dMap();
             }, 1000)
         }
     }
@@ -79,10 +82,30 @@
         getBuildingControl();
     }, 500);
 
+    //添加地图加载完成时的回调
+    function set2dMap() {
+        buttons[0].innerText = '切换3d';
+        map.skewTo(0);
+    }
+
+    map.onLoad = function () {
+
+        set2dMap();
+        buttons[0].onclick = function () {
+            if (buttons[0].innerText == '切换2d') {
+                map.skewTo(0);
+                buttons[0].innerText = '切换3d';
+            } else {
+                map.skewTo(60);
+                buttons[0].innerText = '切换2d';
+            }
+
+        };
+    }
 
     window.onload = function(){
         console.log('初始化-============')
-        // tryAddOverlay()
+        tryAddOverlay()
     }
 
     //添加地图加载完成时的回调
