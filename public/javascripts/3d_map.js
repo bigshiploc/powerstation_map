@@ -146,6 +146,10 @@
 		// console.log(feature);
 		if (feature.parent.name === 'Area') {
 			console.log('--这里是一个回调--');
+            layer.alert(JSON.stringify(e.point), {
+                skin: 'layui-layer-molv' //样式类名
+                ,closeBtn: 0
+            });
 			map.setColor(feature.parent, 'id', feature.id, 0xff0000);
 		}
 	};
