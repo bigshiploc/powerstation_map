@@ -8,6 +8,18 @@
     <title>Document</title>
     <link rel="stylesheet" href="../libs/js3d-sdk/ngr.min.css">
     <link rel="stylesheet" type="text/css" href="../stylesheets/3d_style.css">
+    <script src="../libs/js3d-sdk/ngr.min.js"></script>
+    <script src="../libs/jquery-3.2.1.min.js"></script>
+    <script src="../libs/layer/layer.js"></script>
+    <script src="http://localhost:8000/client.js"></script>
+    <script>
+        window.client = new Faye.Client('http://localhost:8000/');
+
+        window.client.subscribe('/messages', function(message) {
+            alert('Got a message: ' + message.text);
+        });
+
+    </script>
 </head>
 <body>
 
@@ -16,7 +28,6 @@
         <button class="btn">切换2d</button>
     </div>
 </div>
-<script src="../libs/js3d-sdk/ngr.min.js"></script>
 <script src="../javascripts/3d_map.js"></script>
 </body>
 </html>

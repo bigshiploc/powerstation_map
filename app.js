@@ -29,6 +29,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // app.use('/', index);
 app.use('/3d', map_3d_171);
 app.use('/', map_3d);
+require('./routes/web_server.js')
+require('./routes/raw_data.js')
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

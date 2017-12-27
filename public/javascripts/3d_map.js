@@ -10,24 +10,53 @@
     var map = new NGR.map.Map({
         appKey: 'da706c00986c43c4ba63ed5d2c01993b',
         styleTemplate: '../stylesheets/template.json',
-        
+
     });
 
     var AddOverlay;
     var FloorControl;
     var buttons = document.getElementsByClassName('btn');
 
+    function generateGuuId() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+
     //绘制标志的方法
     function addOverlay() {
         clearInterval(AddOverlay);
+        console.log(map)
         console.log('==清除标记循环==');
-        return map.addOverlay({
+        var overlay = map.addOverlay({
             url: '../images/search_marker.png',  //标志样式的存放地址
             position: [14100500.629299998, 5708193.7654],  //标志要添加的位置坐标
             size: [32, 32],  //标志的大小
             anchor: [0, 0],
             className: 'overlay-icon',
         });
+        // console.log(overlay)
+        overlay.targetDom.id = generateGuuId();
+
+        return overlay.on("click", function (e) {
+            console.log(e)
+            layer.tips('<div>谷歌地图：45.5477151834，126.6668575089X<br>' +
+                '百度地图：45.5533647497,126.6734948589<br>' +
+                '腾讯高德：<span style="color: green">45.5477280458,126.6668754816</span><br>' +
+                '图吧地图：45.5554916658,126.6652069116<br>' +
+                '谷歌地球：45.5457016658,126.6608869116<br>北纬N4532*44.53’东经E1263939.19<br><br>' +
+                '靠近：中国黑龙江省哈尔滨市平房区<br>' +
+                '周边：市蔬菜基地约707米<br>' +
+                '参考：黑龙江省哈尔滨市双城市周家镇东海村西北方</div>', '#' + e.targetDom.id, {
+                area: 'auto',
+                maxWidth: '500px',
+                skin: 'liu-tips-class',
+                time: false,
+                closeBtn: 1,
+                tips: [1, 'white']
+            });
+        })
     }
 
 
@@ -51,8 +80,8 @@
         try {
             map.buildingControl.on('change', function (e) {
                 console.log('--监听到一次建筑物变化--' + e.from + '--' + e.to)
-
                 tryAddOverlay();
+
 
                 clearInterval(FloorControl);
                 FloorControl = setInterval(function () {
@@ -82,15 +111,16 @@
         getBuildingControl();
     }, 500);
 
-    //添加地图加载完成时的回调
+    //初始化地图时设置为2d
     function set2dMap() {
         buttons[0].innerText = '切换3d';
         map.skewTo(0);
     }
 
+    //添加地图加载完成时的回调
     map.onLoad = function () {
+        tryAddOverlay()
 
-        set2dMap();
         buttons[0].onclick = function () {
             if (buttons[0].innerText == '切换2d') {
                 map.skewTo(0);
@@ -101,11 +131,6 @@
             }
 
         };
-    }
-
-    window.onload = function(){
-        console.log('初始化-============')
-        tryAddOverlay()
     }
 
     //添加地图加载完成时的回调
