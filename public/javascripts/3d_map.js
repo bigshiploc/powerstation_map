@@ -24,6 +24,7 @@
     var FloorControl;
     var buttons = document.getElementsByClassName('btn');
 
+    //获取唯一id
     function generateGuuId() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -33,8 +34,6 @@
 
     //绘制标志的方法
     function addOverlay() {
-        clearInterval(AddOverlay);
-        console.log(map)
         console.log('==清除标记循环==');
         var overlay = map.addOverlay({
             url: '../images/search_marker.png',  //标志样式的存放地址
@@ -43,7 +42,7 @@
             anchor: [0, 0],
             className: 'overlay-icon',
         });
-        // console.log(overlay)
+        clearInterval(AddOverlay);
         overlay.targetDom.id = generateGuuId();
 
         return overlay.on("click", function (e) {
