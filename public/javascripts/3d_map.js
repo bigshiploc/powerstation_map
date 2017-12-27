@@ -12,7 +12,14 @@
         styleTemplate: '../stylesheets/template.json',
 
     });
+	
+    //faye接收数据
+	var client = new Faye.Client('http://localhost:3000/faye');
+	client.subscribe('/test', function(msg) {
+		console.log(msg + ' wangyongfei');
+	});
 
+	
     var AddOverlay;
     var FloorControl;
     var buttons = document.getElementsByClassName('btn');
@@ -131,9 +138,22 @@
             }
 
         };
-    }
+    };
+	
+	//给地图添加点击事件（以后要做点击建筑物或终端显示其基本信息）
+	map.onClick = function (e) {
+		var feature = e.feature;
+		
+		// console.log(feature);
+		if (feature.parent.name === 'Area') {
+			console.log('--这里是一个回调--');
+			map.setColor(feature.parent, 'id', feature.id, 0xff0000);
+		}
+	};
 
-    //添加地图加载完成时的回调
+ 
+	
+	//添加地图加载完成时的回调
     // map.onLoad = function () {
     //
     //     var arr = [[14100500.629299998, 5708193.7654], [14100495.503700003, 5708153.087099999], [14100440.729900002, 5708156.914000001], [14100374.820500001, 5708174.3869]];
@@ -168,17 +188,7 @@
     //
     // };
 
-    //给地图添加点击事件（以后要做点击建筑物或终端显示其基本信息）
-    map.onClick = function (e) {
-        var feature = e.feature;
-
-        // console.log(feature);
-        if (feature.parent.name === 'Area') {
-            console.log('--这里是一个回调--');
-            map.setColor(feature.parent, 'id', feature.id, 0xff0000);
-        }
-    };
-
+    
     map.render(3033);
     // map.dataSource.requestMaps().then(result_callback).catch(fail_callback);
     // map.dataSource.requestMap(3033).then(result_callback).catch(fail_callback);

@@ -8,6 +8,8 @@ var app = require('../app');
 var debug = require('debug')('powerstation-map:server');
 var http = require('http');
 
+var faye = require('faye'); //faye
+
 /**
  * Get port from environment and store in Express.
  */
@@ -21,9 +23,14 @@ app.set('port', port);
 
 var server = http.createServer(app);
 
+var bayeux = new faye.NodeAdapter({mount: '/faye', timeout: 120}); //faye
+
+
 /**
  * Listen on provided port, on all network interfaces.
  */
+
+bayeux.attach(server); //faye
 
 server.listen(port);
 server.on('error', onError);
