@@ -17,16 +17,90 @@ router.get('/', function (req, res, next) {
 	
 });
 
+var a = {
+    "data": [
+        {
+            "sbms": "设备描述1",
+            "qyms": "区域描述1",
+            "rwxtm": "任务系统码1",
+            "yhxtm": "6268de6841da4256bddd16e01e5ba55f_用户系统码1",
+            "rwms": "任务描述1",
+            "xmms": "项目描述1",
+            "name": "超级管理员1",
+            "mac": "0C-9F-9E-DC-9A-62",
+            "piont": "45.547664293984795,126.66702098161626",
+            "dlm": "sysadmin_登录名1",
+            "deptname": "部门名称1",
+            "mapName": "化水车间_终端所在区域名称1"
+        },
+        {
+            "sbms": "设备描述2",
+            "qyms": "区域描述2",
+            "rwxtm": "任务系统码2",
+            "yhxtm": "6268de6841da4256bddd16e01e5ba55f_用户系统码2",
+            "rwms": "任务描述2",
+            "xmms": "项目描述2",
+            "name": "超级管理员2",
+            "mac": "0C-9F-9E-DC-9A-62",
+            "piont": "45.547664293984795,126.66702098161626",
+            "dlm": "sysadmin_登录名2",
+            "deptname": "部门名称2",
+            "mapName": "化水车间_终端所在区域名称2"
+        },
+        {
+            "sbms": "设备描述3",
+            "qyms": "区域描述3",
+            "rwxtm": "任务系统码3",
+            "yhxtm": "6268de6841da4256bddd16e01e5ba55f_用户系统码3",
+            "rwms": "任务描述3",
+            "xmms": "项目描述3",
+            "name": "超级管理员3",
+            "mac": "0C-9F-9E-DC-9A-62",
+            "piont": "45.547664293984795,126.66702098161626",
+            "dlm": "sysadmin_登录名3",
+            "deptname": "部门名称3",
+            "mapName": "化水车间_终端所在区域名称3"
+        },
+        {
+            "sbms": "设备描述4",
+            "qyms": "区域描述4",
+            "rwxtm": "任务系统码4",
+            "yhxtm": "6268de6841da4256bddd16e01e5ba55f_用户系统码4",
+            "rwms": "任务描述4",
+            "xmms": "项目描述4",
+            "name": "超级管理员4",
+            "mac": "0C-9F-9E-DC-9A-62",
+            "piont": "45.547664293984795,126.66702098161626",
+            "dlm": "sysadmin_登录名4",
+            "deptname": "部门名称4",
+            "mapName": "化水车间_终端所在区域名称4"
+        },
+        {
+            "sbms": "设备描述5",
+            "qyms": "区域描述5",
+            "rwxtm": "任务系统码5",
+            "yhxtm": "6268de6841da4256bddd16e01e5ba55f_用户系统码5",
+            "rwms": "任务描述5",
+            "xmms": "项目描述5",
+            "name": "超级管理员5",
+            "mac": "0C-9F-9E-DC-9A-62",
+            "piont": "45.547664293984795,126.66702098161626",
+            "dlm": "sysadmin_登录名5",
+            "deptname": "部门名称5",
+            "mapName": "化水车间_终端所在区域名称5"
+        },
+    ]
+}
 
 // faye向前端发送数据
 function fayeSendDdata() {
 	var client = new faye.Client('http://localhost:3000/faye');
 	
-	var msgNo = 1;
+	// var msgNo = 1;
 	setInterval(function() {
-		for (i = 0; i < 50; i++){
-			client.publish('/test',"This is the test message no. " + msgNo);
-			msgNo++;
+		for (i = 0; i < a.data.length; i++){
+			client.publish('/data',JSON.stringify(a.data[i]));
+			// msgNo++;
 		}
 	}, 2000);
 }

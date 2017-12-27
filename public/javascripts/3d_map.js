@@ -15,8 +15,8 @@
 	
     //faye接收数据
 	var client = new Faye.Client('http://localhost:3000/faye');
-	client.subscribe('/test', function(msg) {
-		console.log(msg + ' wangyongfei');
+	client.subscribe('/data', function(msg) {
+		console.log(msg);
 	});
 
 	
@@ -143,7 +143,7 @@
 	map.onClick = function (e) {
 		var feature = e.feature;
 		
-		// console.log(feature);
+		console.log(e);
 		if (feature.parent.name === 'Area') {
 			console.log('--这里是一个回调--');
             layer.alert(JSON.stringify(e.point), {
