@@ -12,17 +12,25 @@
         styleTemplate: '../stylesheets/template.json',
 
     });
-	
-    //faye接收数据
-	var client = new Faye.Client('http://localhost:3000/faye');
-	client.subscribe('/data', function(msg) {
-		console.log(msg);
-	});
-
-	
+    var message;
+    var allOverlay = {};
     var AddOverlay;
     var FloorControl;
     var buttons = document.getElementsByClassName('btn');
+
+    //faye接收数据
+    var client = new Faye.Client('http://localhost:3000/faye');
+	client.subscribe('/data', function(msg) {
+	    // console.log(  msg.piont.substring(0,msg.piont.indexOf(','))      )
+        // if(!msg) {
+        message= msg
+            tryAddOverlay(msg)
+            // console.log(piont)
+        // }
+	});
+
+	
+
 
     //获取唯一id
     function generateGuuId() {
@@ -33,36 +41,40 @@
     }
 
     //绘制标志的方法
-    function addOverlay() {
-        console.log('==清除标记循环==');
-        var overlay = map.addOverlay({
-            url: '../images/search_marker.png',  //标志样式的存放地址
-            position: [14100500.629299998, 5708193.7654],  //标志要添加的位置坐标
-            size: [32, 32],  //标志的大小
-            anchor: [0, 0],
-            className: 'overlay-icon',
-        });
-        clearInterval(AddOverlay);
-        overlay.targetDom.id = generateGuuId();
-
-        return overlay.on("click", function (e) {
-            console.log(e)
-            layer.tips('<div>谷歌地图：45.5477151834，126.6668575089X<br>' +
-                '百度地图：45.5533647497,126.6734948589<br>' +
-                '腾讯高德：<span style="color: green">45.5477280458,126.6668754816</span><br>' +
-                '图吧地图：45.5554916658,126.6652069116<br>' +
-                '谷歌地球：45.5457016658,126.6608869116<br>北纬N4532*44.53’东经E1263939.19<br><br>' +
-                '靠近：中国黑龙江省哈尔滨市平房区<br>' +
-                '周边：市蔬菜基地约707米<br>' +
-                '参考：黑龙江省哈尔滨市双城市周家镇东海村西北方</div>', '#' + e.targetDom.id, {
-                area: 'auto',
-                maxWidth: '500px',
-                skin: 'liu-tips-class',
-                time: false,
-                closeBtn: 1,
-                tips: [1, 'white']
+    function addOverlay(msg) {
+        var piont = map.unoffset(msg.piont.substring(0, msg.piont.indexOf(',')), msg.piont.substring(msg.piont.indexOf(',') + 1));
+        if(document.getElementById(msg.sbms)===null){
+            console.log('==清除标记循环==');
+            var overlay = map.addOverlay({
+                url: '../images/search_marker.png',  //标志样式的存放地址
+                position: [piont.x+Math.random()*100, piont.y+Math.random()*10],  //标志要添加的位置坐标
+                size: [32, 32],  //标志的大小
+                anchor: [0, 0],
+                className: 'overlay-icon',
             });
-        })
+            clearInterval(AddOverlay);
+            overlay.targetDom.id = msg.sbms;
+            allOverlay[msg.sbms] = overlay
+            overlay.on("click", function (e) {
+                layer.tips(msg.piont, '#' + e.targetDom.id, {
+                    area: 'auto',
+                    maxWidth: '500px',
+                    skin: 'liu-tips-class',
+                    time: false,
+                    closeBtn: 1,
+                    tips: [1, 'white'],
+                    id : e.targetDom.id+"tips"
+                });
+            })
+        }else {
+            if(document.getElementById(msg.sbms+"tips")!=null){
+                console.log(document.getElementById(msg.sbms+"tips"))
+                document.getElementById(msg.sbms+"tips").innerText=msg.piont
+            }
+            allOverlay[msg.sbms].position = {x:piont.x+Math.random()*100, y:piont.y+Math.random()*10};
+            clearInterval(AddOverlay);
+        }
+
     }
 
 
@@ -101,16 +113,16 @@
         }
     }
 
-    function tryAddOverlay() {
-        try {
-            addOverlay();
-            set2dMap();
-        } catch (err) {
+    function tryAddOverlay(piont) {
+        // try {
+        //     addOverlay(piont);
+        //     set2dMap();
+        // } catch (err) {
             AddOverlay = setInterval(function () {
-                addOverlay();
+                addOverlay(piont);
                 set2dMap();
             }, 1000)
-        }
+        // }
     }
 
     var BuildingControl = setInterval(function () {
@@ -125,8 +137,7 @@
 
     //添加地图加载完成时的回调
     map.onLoad = function () {
-        tryAddOverlay()
-
+        // tryAddOverlay(piont);
         buttons[0].onclick = function () {
             if (buttons[0].innerText == '切换2d') {
                 map.skewTo(0);
