@@ -21,15 +21,11 @@
     //faye接收数据
     var client = new Faye.Client('http://localhost:3000/faye');
 	client.subscribe('/data', function(msg) {
-	    // console.log(  msg.piont.substring(0,msg.piont.indexOf(','))      )
-        // if(!msg) {
-        message= msg
-            tryAddOverlay(msg)
-            // console.log(piont)
-        // }
+        message= msg;
+        fayeMsg(msg)
 	});
 
-	
+
 
 
     //获取唯一id
@@ -54,9 +50,9 @@
             });
             clearInterval(AddOverlay);
             overlay.targetDom.id = msg.sbms;
-            allOverlay[msg.sbms] = overlay
+            allOverlay[msg.sbms] = overlay;
             overlay.on("click", function (e) {
-                layer.tips(msg.piont, '#' + e.targetDom.id, {
+                layer.tips('<div>'+msg.piont +'</div>', '#' + e.targetDom.id, {
                     area: 'auto',
                     maxWidth: '500px',
                     skin: 'liu-tips-class',
@@ -68,8 +64,8 @@
             })
         }else {
             if(document.getElementById(msg.sbms+"tips")!=null){
-                console.log(document.getElementById(msg.sbms+"tips"))
-                document.getElementById(msg.sbms+"tips").innerText=msg.piont
+                console.log(msg.piont);
+                document.getElementById(msg.sbms+"tips").getElementsByTagName('div')[0].innerText=allOverlay[msg.sbms].position
             }
             allOverlay[msg.sbms].position = {x:piont.x+Math.random()*100, y:piont.y+Math.random()*10};
             clearInterval(AddOverlay);
@@ -84,7 +80,7 @@
             map.floorControl.on('change', function (e) {
                 console.log('--监听到一次楼层变化--' + e.from + '--' + e.to)
 
-                tryAddOverlay();
+                fayeMsg(message);
             });
             console.log('==结束这个监听楼层变化的轮循==');
             clearInterval(FloorControl);
@@ -98,7 +94,7 @@
         try {
             map.buildingControl.on('change', function (e) {
                 console.log('--监听到一次建筑物变化--' + e.from + '--' + e.to)
-                tryAddOverlay();
+                fayeMsg(message);
 
 
                 clearInterval(FloorControl);
@@ -113,16 +109,17 @@
         }
     }
 
-    function tryAddOverlay(piont) {
-        // try {
-        //     addOverlay(piont);
-        //     set2dMap();
-        // } catch (err) {
-            AddOverlay = setInterval(function () {
-                addOverlay(piont);
-                set2dMap();
-            }, 1000)
-        // }
+    function fayeMsg(msg) {
+            if(msg[i].sbms==='设备描述1') {
+                tryAddOverlay(msg[i])
+            }
+        
+    }
+
+    function tryAddOverlay(msg,qyms) {
+                AddOverlay = setInterval(function () {
+                    addOverlay(msg);
+                }, 1000)
     }
 
     var BuildingControl = setInterval(function () {
@@ -138,6 +135,8 @@
     //添加地图加载完成时的回调
     map.onLoad = function () {
         // tryAddOverlay(piont);
+        set2dMap();
+
         buttons[0].onclick = function () {
             if (buttons[0].innerText == '切换2d') {
                 map.skewTo(0);
@@ -149,11 +148,11 @@
 
         };
     };
-	
+
 	//给地图添加点击事件（以后要做点击建筑物或终端显示其基本信息）
 	map.onClick = function (e) {
 		var feature = e.feature;
-		
+
 		console.log(e);
 		if (feature.parent.name === 'Area') {
 			console.log('--这里是一个回调--');
@@ -165,8 +164,8 @@
 		}
 	};
 
- 
-	
+
+
 	//添加地图加载完成时的回调
     // map.onLoad = function () {
     //
@@ -202,7 +201,7 @@
     //
     // };
 
-    
+
     map.render(3033);
     // map.dataSource.requestMaps().then(result_callback).catch(fail_callback);
     // map.dataSource.requestMap(3033).then(result_callback).catch(fail_callback);
