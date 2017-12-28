@@ -108,7 +108,7 @@
     }
 
     function fayeMsg(msg) {
-        if (msg[i].sbms === '设备描述1') {
+        if (msg.sbms === '设备描述1') {
             tryAddOverlay(msg)
         }
 
