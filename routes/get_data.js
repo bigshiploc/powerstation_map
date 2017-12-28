@@ -29,7 +29,6 @@ function GetData() {
 		setInterval(function() {
 			for (i = 0; i < a.data.length; i++){
 				client.publish('/data',a.data[i]);
-				console.log(a.data[i])
 				// msgNo++;
 			}
 		}, 5000);
