@@ -26,6 +26,60 @@
         fayeMsg(msg)
     });
 
+    function fayeMsg(msg) {
+        if (msg.sbms === '设备描述1') {
+            tryAddOverlay(msg)
+        }
+
+    }
+
+    function tryAddOverlay(msg, qyms) {
+        AddOverlay = setInterval(function () {
+            editOverlay(msg);
+        }, 1000)
+    }
+
+    //绘制标志的方法
+    function editOverlay(msg) {
+        var piont = map.unoffset(msg.piont.substring(0, msg.piont.indexOf(',')), msg.piont.substring(msg.piont.indexOf(',') + 1));
+        if (document.getElementById(msg.sbms) === null) {
+            console.log('==清除标记循环==');
+            addOverlay(piont,msg)
+        } else {
+            changeTips(msg,piont)
+        }
+    }
+    
+    function changeTips(msg,piont) {
+        if (document.getElementById(msg.sbms + "tips") != null) {
+            console.log(msg.piont);
+            document.getElementById(msg.sbms + "tips").getElementsByTagName('div')[0].innerText = allOverlay[msg.sbms].position
+        }
+        allOverlay[msg.sbms].position = {x: piont.x + Math.random() * 100, y: piont.y + Math.random() * 10};
+        clearInterval(AddOverlay);
+    }
+
+    function addOverlay(piont,msg) {
+        var overlay = map.addOverlay({
+            url: '../images/search_marker.png',  //标志样式的存放地址
+            position: [piont.x + Math.random() * 100, piont.y + Math.random() * 10],  //标志要添加的位置坐标
+            size: [32, 32],  //标志的大小
+            anchor: [0, 0],
+            className: 'overlay-icon',
+        });
+        clearInterval(AddOverlay);
+       setOverlay(overlay,msg)
+    }
+    
+    function setOverlay(overlay,msg) {
+        overlay.targetDom.id = msg.sbms;
+        overlay.on("click", function (e) {
+            getLayerTips(msg,e)
+        });
+
+        allOverlay[msg.sbms] = overlay;
+    }
+
     function getLayerTips(msg,e) {
         layer.tips('<div>' + msg.piont + '</div>', '#' + e.targetDom.id, {
             area: 'auto',
@@ -38,46 +92,16 @@
         });
     }
 
-    function addOverlay(piont,msg) {
-        var overlay = map.addOverlay({
-            url: '../images/search_marker.png',  //标志样式的存放地址
-            position: [piont.x + Math.random() * 100, piont.y + Math.random() * 10],  //标志要添加的位置坐标
-            size: [32, 32],  //标志的大小
-            anchor: [0, 0],
-            className: 'overlay-icon',
-        });
-        clearInterval(AddOverlay);
-        overlay.targetDom.id = msg.sbms;
-        overlay.on("click", function (e) {
-            getLayerTips(msg,e)
-        });
-
-        allOverlay[msg.sbms] = overlay;
-    }
-
-    //绘制标志的方法
-    function editOverlay(msg) {
-        var piont = map.unoffset(msg.piont.substring(0, msg.piont.indexOf(',')), msg.piont.substring(msg.piont.indexOf(',') + 1));
-        if (document.getElementById(msg.sbms) === null) {
-            console.log('==清除标记循环==');
-            addOverlay(piont,msg)
-        } else {
-            if (document.getElementById(msg.sbms + "tips") != null) {
-                console.log(msg.piont);
-                document.getElementById(msg.sbms + "tips").getElementsByTagName('div')[0].innerText = allOverlay[msg.sbms].position
-            }
-            allOverlay[msg.sbms].position = {x: piont.x + Math.random() * 100, y: piont.y + Math.random() * 10};
-            clearInterval(AddOverlay);
-        }
-
-    }
-
+    var BuildingControl = setInterval(function () {
+        getBuildingControl();
+    }, 500);
 
     //监听楼层的方法
     function getFloorControl() {
         try {
             map.floorControl.on('change', function (e) {
                 console.log('--监听到一次楼层变化--' + e.from + '--' + e.to)
+                clearInterval(setSkew)
 
                 fayeMsg(message);
                 set2dMap();
@@ -94,13 +118,8 @@
         try {
             map.buildingControl.on('change', function (e) {
                 console.log('--监听到一次建筑物变化--' + e.from + '--' + e.to)
-                fayeMsg(message);
-
-                set2dMap();
-                clearInterval(FloorControl);
-                FloorControl = setInterval(function () {
-                    getFloorControl();
-                }, 500);
+                clearInterval(setSkew)
+                changeBuilding()
             });
             console.log('==结束这个监听建筑物变化的轮循==');
             clearInterval(BuildingControl);
@@ -109,22 +128,15 @@
         }
     }
 
-    function fayeMsg(msg) {
-        if (msg.sbms === '设备描述1') {
-            tryAddOverlay(msg)
-        }
+    function changeBuilding() {
+        fayeMsg(message);
 
+        set2dMap();
+        clearInterval(FloorControl);
+        FloorControl = setInterval(function () {
+            getFloorControl();
+        }, 500);
     }
-
-    function tryAddOverlay(msg, qyms) {
-        AddOverlay = setInterval(function () {
-            editOverlay(msg);
-        }, 1000)
-    }
-
-    var BuildingControl = setInterval(function () {
-        getBuildingControl();
-    }, 500);
 
     //初始化地图时设置为2d
     function set2dMap() {
