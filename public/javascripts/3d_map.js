@@ -16,6 +16,7 @@
     var allOverlay = {};
     var AddOverlay;
     var FloorControl;
+    var setSkew;
     var buttons = document.getElementsByClassName('btn');
 
     //faye接收数据
@@ -25,41 +26,41 @@
         fayeMsg(msg)
     });
 
-
-    //获取唯一id
-    function generateGuuId() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
+    function getLayerTips(msg,e) {
+        layer.tips('<div>' + msg.piont + '</div>', '#' + e.targetDom.id, {
+            area: 'auto',
+            maxWidth: '500px',
+            skin: 'liu-tips-class',
+            time: false,
+            closeBtn: 1,
+            tips: [1, 'white'],
+            id: e.targetDom.id + "tips"
         });
     }
 
+    function addOverlay(piont,msg) {
+        var overlay = map.addOverlay({
+            url: '../images/search_marker.png',  //标志样式的存放地址
+            position: [piont.x + Math.random() * 100, piont.y + Math.random() * 10],  //标志要添加的位置坐标
+            size: [32, 32],  //标志的大小
+            anchor: [0, 0],
+            className: 'overlay-icon',
+        });
+        clearInterval(AddOverlay);
+        overlay.targetDom.id = msg.sbms;
+        overlay.on("click", function (e) {
+            getLayerTips(msg,e)
+        });
+
+        allOverlay[msg.sbms] = overlay;
+    }
+
     //绘制标志的方法
-    function addOverlay(msg) {
+    function editOverlay(msg) {
         var piont = map.unoffset(msg.piont.substring(0, msg.piont.indexOf(',')), msg.piont.substring(msg.piont.indexOf(',') + 1));
         if (document.getElementById(msg.sbms) === null) {
             console.log('==清除标记循环==');
-            var overlay = map.addOverlay({
-                url: '../images/search_marker.png',  //标志样式的存放地址
-                position: [piont.x + Math.random() * 100, piont.y + Math.random() * 10],  //标志要添加的位置坐标
-                size: [32, 32],  //标志的大小
-                anchor: [0, 0],
-                className: 'overlay-icon',
-            });
-            clearInterval(AddOverlay);
-            overlay.targetDom.id = msg.sbms;
-            allOverlay[msg.sbms] = overlay;
-            overlay.on("click", function (e) {
-                layer.tips('<div>' + msg.piont + '</div>', '#' + e.targetDom.id, {
-                    area: 'auto',
-                    maxWidth: '500px',
-                    skin: 'liu-tips-class',
-                    time: false,
-                    closeBtn: 1,
-                    tips: [1, 'white'],
-                    id: e.targetDom.id + "tips"
-                });
-            })
+            addOverlay(piont,msg)
         } else {
             if (document.getElementById(msg.sbms + "tips") != null) {
                 console.log(msg.piont);
@@ -79,6 +80,7 @@
                 console.log('--监听到一次楼层变化--' + e.from + '--' + e.to)
 
                 fayeMsg(message);
+                set2dMap();
             });
             console.log('==结束这个监听楼层变化的轮循==');
             clearInterval(FloorControl);
@@ -94,7 +96,7 @@
                 console.log('--监听到一次建筑物变化--' + e.from + '--' + e.to)
                 fayeMsg(message);
 
-
+                set2dMap();
                 clearInterval(FloorControl);
                 FloorControl = setInterval(function () {
                     getFloorControl();
@@ -116,7 +118,7 @@
 
     function tryAddOverlay(msg, qyms) {
         AddOverlay = setInterval(function () {
-            addOverlay(msg);
+            editOverlay(msg);
         }, 1000)
     }
 
@@ -127,7 +129,14 @@
     //初始化地图时设置为2d
     function set2dMap() {
         buttons[0].innerText = '切换3d';
+        setSkew = setInterval(function () {
+            set2dSkew()
+        }, 1000)
+    }
+    
+    function set2dSkew() {
         map.skewTo(0);
+        clearInterval(setSkew)
     }
 
     //添加地图加载完成时的回调
