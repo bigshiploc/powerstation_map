@@ -26,24 +26,31 @@
     //3209332 生产废水及生活污水处理站建筑 F1
     //3209099 化学建筑一层
     var DataName = {
-        3209098:'huashuichejian-1', //化学建筑
-        3209331:'huashuichejian-2', //生产废水及生活污水处理站建筑
-        3209376:'huashuichejian-3', //生活消防水泵房
-        3209407:'huashuichejian-4', //主厂房
-        3209679:'huashuichejian-5' //主厂房二层
+        3209098: 'huashuichejian-1', //化学建筑
+        3209331: 'huashuichejian-2', //生产废水及生活污水处理站建筑
+        3209376: 'huashuichejian-3', //生活消防水泵房
+        3209407: 'huashuichejian-4', //主厂房
+        3209679: 'huashuichejian-5' //主厂房二层
     };
 
     //faye接收数据
     var client = new Faye.Client('http://localhost:3000/faye');
-    client.subscribe('/data', function (msg) {
-        message = msg;
-        fayeMsg(msg)
-    });
-
-    function fayeMsg(msg) {
-        if (msg.sbms === '设备描述1') {
-            tryAddOverlay(msg)
+    function getData(id) {
+        client.subscribe('/data', function (msg) {
+            message = msg;
+            fayeMsg(msg, id)
+        });
+    }
+    getData(3209044);
+    function fayeMsg(msg, id) {
+        if (DataName[id]) {
+            if (msg.mapName == DataName[id]) {
+                tryAddOverlay(msg)
+            }
         }
+        // if (msg.sbms === '设备描述1') {
+        //     tryAddOverlay(msg)
+        // }
 
     }
 
@@ -114,18 +121,17 @@
     function getFloorControl() {
         try {
             map.floorControl.on('change', function (e) {
-                console.log(e.targetControl)
                 console.log('--监听到一次楼层变化--' + e.from + '--' + e.to)
                 clearInterval(setSkew)
 
-                fayeMsg(message);
+                getData(e.to);
                 layer.closeAll('tips');
-                set2dMap();
             });
             console.log('==结束这个监听楼层变化的轮循==');
             clearInterval(FloorControl);
         } catch (err) {
             console.log('--监听楼层变化报错--' + err);
+            set2dMap();
         }
     }
 
@@ -136,7 +142,7 @@
                 console.log('--监听到一次建筑物变化--' + e.from + '--' + e.to)
                 clearInterval(setSkew)
                 layer.closeAll('tips');
-                changeBuilding()
+                changeBuilding(e.to)
             });
             console.log('==结束这个监听建筑物变化的轮循==');
             clearInterval(BuildingControl);
@@ -145,8 +151,8 @@
         }
     }
 
-    function changeBuilding() {
-        fayeMsg(message);
+    function changeBuilding(id) {
+        getData(id);
 
         set2dMap();
         clearInterval(FloorControl);
