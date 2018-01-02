@@ -19,6 +19,20 @@
     var setSkew;
     var buttons = document.getElementsByClassName('btn');
 
+    //3209408 //主厂房一层
+    //3209771 //主厂房三层
+    //3209044  //base
+    //3209377  生活消防水泵房建筑一层
+    //3209332 生产废水及生活污水处理站建筑 F1
+    //3209099 化学建筑一层
+    var DataName = {
+        3209098:'huashuichejian-1', //化学建筑
+        3209331:'huashuichejian-2', //生产废水及生活污水处理站建筑
+        3209376:'huashuichejian-3', //生活消防水泵房
+        3209407:'huashuichejian-4', //主厂房
+        3209679:'huashuichejian-5' //主厂房二层
+    };
+
     //faye接收数据
     var client = new Faye.Client('http://localhost:3000/faye');
     client.subscribe('/data', function (msg) {
@@ -43,14 +57,14 @@
     function editOverlay(msg) {
         var piont = map.unoffset(msg.piont.substring(0, msg.piont.indexOf(',')), msg.piont.substring(msg.piont.indexOf(',') + 1));
         if (document.getElementById(msg.sbms) === null) {
-            console.log('==清除标记循环==');
-            addOverlay(piont,msg)
+            console.log('==添加标记==');
+            addOverlay(piont, msg)
         } else {
-            changeTips(msg,piont)
+            changeTips(msg, piont)
         }
     }
-    
-    function changeTips(msg,piont) {
+
+    function changeTips(msg, piont) {
         if (document.getElementById(msg.sbms + "tips") != null) {
             console.log(msg.piont);
             document.getElementById(msg.sbms + "tips").getElementsByTagName('div')[0].innerText = allOverlay[msg.sbms].position
@@ -59,7 +73,7 @@
         clearInterval(AddOverlay);
     }
 
-    function addOverlay(piont,msg) {
+    function addOverlay(piont, msg) {
         var overlay = map.addOverlay({
             url: '../images/search_marker.png',  //标志样式的存放地址
             position: [piont.x + Math.random() * 100, piont.y + Math.random() * 10],  //标志要添加的位置坐标
@@ -68,19 +82,19 @@
             className: 'overlay-icon',
         });
         clearInterval(AddOverlay);
-       setOverlay(overlay,msg)
+        setOverlay(overlay, msg)
     }
-    
-    function setOverlay(overlay,msg) {
+
+    function setOverlay(overlay, msg) {
         overlay.targetDom.id = msg.sbms;
         overlay.on("click", function (e) {
-            getLayerTips(msg,e)
+            getLayerTips(msg, e)
         });
 
         allOverlay[msg.sbms] = overlay;
     }
 
-    function getLayerTips(msg,e) {
+    function getLayerTips(msg, e) {
         layer.tips('<div>' + msg.piont + '</div>', '#' + e.targetDom.id, {
             area: 'auto',
             maxWidth: '500px',
@@ -100,10 +114,12 @@
     function getFloorControl() {
         try {
             map.floorControl.on('change', function (e) {
+                console.log(e.targetControl)
                 console.log('--监听到一次楼层变化--' + e.from + '--' + e.to)
                 clearInterval(setSkew)
 
                 fayeMsg(message);
+                layer.closeAll('tips');
                 set2dMap();
             });
             console.log('==结束这个监听楼层变化的轮循==');
@@ -119,6 +135,7 @@
             map.buildingControl.on('change', function (e) {
                 console.log('--监听到一次建筑物变化--' + e.from + '--' + e.to)
                 clearInterval(setSkew)
+                layer.closeAll('tips');
                 changeBuilding()
             });
             console.log('==结束这个监听建筑物变化的轮循==');
@@ -133,29 +150,28 @@
 
         set2dMap();
         clearInterval(FloorControl);
+
         FloorControl = setInterval(function () {
             getFloorControl();
-        }, 500);
+        }, 1000);
     }
 
     //初始化地图时设置为2d
     function set2dMap() {
+        clearInterval(setSkew);
         buttons[0].innerText = '切换3d';
         setSkew = setInterval(function () {
-            set2dSkew()
+            console.log('切换2d---------------')
+            map.skewTo(0);
+            clearInterval(setSkew)
         }, 1000)
-    }
-    
-    function set2dSkew() {
-        map.skewTo(0);
-        clearInterval(setSkew)
     }
 
     //添加地图加载完成时的回调
     map.onLoad = function () {
         // tryAddOverlay(piont);
         set2dMap();
-
+        console.log(map._buildingInfoList)
         buttons[0].onclick = function () {
             if (buttons[0].innerText == '切换2d') {
                 map.skewTo(0);

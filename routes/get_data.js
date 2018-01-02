@@ -24,10 +24,9 @@ function GetData() {
 	
 	this.fayeSendDdata = function (a) {
 		var client = new faye.Client('http://localhost:3000/faye');
-		
 		// var msgNo = 0;
 		setInterval(function() {
-			for (i = 0; i < a.data.length; i++){
+			for (var i = 0; i < a.data.length; i++){
 				client.publish('/data',a.data[i]);
 				// msgNo++;
 			}

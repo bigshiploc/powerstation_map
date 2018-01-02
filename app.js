@@ -56,7 +56,7 @@ var a = {
 			"piont": "45.5637664293984795,126.69782198161626",
 			"dlm": "sysadmin_登录名1",
 			"deptname": "部门名称1",
-			"mapName": "化水车间_终端所在区域名称1"
+			"mapName": "化水车间-1"
 		},
 		{
 			"sbms": "设备描述2",
@@ -70,7 +70,7 @@ var a = {
 			"piont": "45.5467664293984795,126.666451098161626",
 			"dlm": "sysadmin_登录名2",
 			"deptname": "部门名称2",
-			"mapName": "化水车间_终端所在区域名称2"
+			"mapName": "化水车间-2"
 		},
 		{
 			"sbms": "设备描述3",
@@ -84,7 +84,7 @@ var a = {
 			"piont": "45.5569864293984795,126.66569098161626",
 			"dlm": "sysadmin_登录名3",
 			"deptname": "部门名称3",
-			"mapName": "化水车间_终端所在区域名称3"
+			"mapName": "化水车间-3"
 		},
 		{
 			"sbms": "设备描述4",
@@ -98,7 +98,7 @@ var a = {
 			"piont": "45.596564293984795,126.632902098161626",
 			"dlm": "sysadmin_登录名4",
 			"deptname": "部门名称4",
-			"mapName": "化水车间_终端所在区域名称4"
+			"mapName": "化水车间-4"
 		},
 		{
 			"sbms": "设备描述5",
@@ -112,11 +112,21 @@ var a = {
 			"piont": "45.5562664293984795,126.667456098161626",
 			"dlm": "sysadmin_登录名5",
 			"deptname": "部门名称5",
-			"mapName": "化水车间_终端所在区域名称5"
+			"mapName": "化水车间-5"
 		},
 	]
 }
+var dataName = {
+    '化水车间-1': 'huashuichejian-1',
+    '化水车间-2': 'huashuichejian-2',
+    '化水车间-3': 'huashuichejian-3',
+    '化水车间-4': 'huashuichejian-4',
+    '化水车间-5': 'huashuichejian-5'
+};
 
+for(var i =0 ;i<a.data.length;i++){
+    a.data[i].mapName = dataName[a.data[i].mapName]
+}
 //向前端发送数据
 getData.fayeSendDdata(a);
 
