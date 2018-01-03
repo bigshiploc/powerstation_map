@@ -118,9 +118,10 @@
         try {
             map.floorControl.on('change', function (e) {
                 console.log('--监听到一次楼层变化--' + e.from + '--' + e.to)
+                msgID = e.to;
+
                 clearInterval(setSkew);
 
-                msgID = e.to;
                 set2dMap();
                 layer.closeAll('tips');
             });
@@ -137,7 +138,6 @@
         try {
             map.buildingControl.on('change', function (e) {
                 console.log('--监听到一次建筑物变化--' + e.from + '--' + e.to)
-                clearInterval(setSkew)
                 layer.closeAll('tips');
                 changeBuilding(e.to)
             });
@@ -151,12 +151,14 @@
     function changeBuilding(id) {
         msgID = id;
 
-        set2dMap();
+        clearInterval(setSkew);
         clearInterval(FloorControl);
-
-        FloorControl = setInterval(function () {
-            getFloorControl();
-        }, 1000);
+        set2dMap();
+        if (id !== 3209044) {
+            FloorControl = setInterval(function () {
+                getFloorControl();
+            }, 1000);
+        }
     }
 
     //初始化地图时设置为2d
