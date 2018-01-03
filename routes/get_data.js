@@ -17,19 +17,16 @@ function GetData() {
 		console.log('-------开始请求缺陷/异常数据-------');
 		http.get('http://www.chasingeda.com:7777/appsoft7/appservlet?requesttype=assetmapstatus&date=2017-12-12', function (response) {
 			response.on('data', function (result) {
-				console.log('TerminalData:' + result)
+				console.log('TerminalData' + result)
 			})
 		})
 	};
 	
 	this.fayeSendDdata = function (a) {
 		var client = new faye.Client('http://localhost:3000/faye');
-		// var msgNo = 0;
+
 		setInterval(function() {
-			for (var i = 0; i < a.data.length; i++){
-				client.publish('/data',a.data[i]);
-				// msgNo++;
-			}
+			client.publish('/data',a.data);
 		}, 5000);
 	}
 }

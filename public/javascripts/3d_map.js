@@ -12,7 +12,8 @@
         styleTemplate: '../stylesheets/template.json',
 
     });
-    var message;
+    var message=[];
+    var msgID= 3209044;
     var allOverlay = {};
     var AddOverlay;
     var FloorControl;
@@ -35,17 +36,18 @@
 
     //faye接收数据
     var client = new Faye.Client('http://localhost:3000/faye');
-    function getData(id) {
-        client.subscribe('/data', function (msg) {
-            message = msg;
-            fayeMsg(msg, id)
-        });
-    }
-    getData(3209044);
+    client.subscribe('/data', function (msg) {
+        message = msg;
+        fayeMsg(msg, msgID)
+    });
+
     function fayeMsg(msg, id) {
+        msgID = id;
         if (DataName[id]) {
-            if (msg.mapName == DataName[id]) {
-                tryAddOverlay(msg)
+            for (var i = 0; i < msg.length; i++) {
+                if (msg[i].mapName == DataName[id]) {
+                    tryAddOverlay(msg[i])
+                }
             }
         }
         // if (msg.sbms === '设备描述1') {
@@ -122,9 +124,9 @@
         try {
             map.floorControl.on('change', function (e) {
                 console.log('--监听到一次楼层变化--' + e.from + '--' + e.to)
-                clearInterval(setSkew)
+                clearInterval(setSkew);
 
-                getData(e.to);
+                fayeMsg(message, e.to);
                 layer.closeAll('tips');
             });
             console.log('==结束这个监听楼层变化的轮循==');
@@ -152,7 +154,7 @@
     }
 
     function changeBuilding(id) {
-        getData(id);
+        fayeMsg(message, id);
 
         set2dMap();
         clearInterval(FloorControl);
