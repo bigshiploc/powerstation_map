@@ -34,6 +34,7 @@ app.use('/', map_3d);
 
 
 //获取数据并发送数据
+
 var getData = new GetData();
 
 setInterval(function () {
@@ -122,34 +123,34 @@ setInterval(function () {
 // 	]
 // }
 
-var dataName = {
-	'化水车间-1': 'huashuichejian-1',
-	'化水车间-2': 'huashuichejian-2',
-	'化水车间-3': 'huashuichejian-3',
-	'化水车间-4': 'huashuichejian-4',
-	'化水车间-5': 'huashuichejian-5'
-};
-
-for (var i = 0; i < a.data.length; i++) {
-	a.data[i].mapName = dataName[a.data[i].mapName]
-}
+// var dataName = {
+// 	'化水车间-1': 'huashuichejian-1',
+// 	'化水车间-2': 'huashuichejian-2',
+// 	'化水车间-3': 'huashuichejian-3',
+// 	'化水车间-4': 'huashuichejian-4',
+// 	'化水车间-5': 'huashuichejian-5'
+// };
+//
+// for (var i = 0; i < a.data.length; i++) {
+// 	a.data[i].mapName = dataName[a.data[i].mapName]
+// }
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-	var err = new Error('Not Found');
-	err.status = 404;
-	next(err);
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
 // error handler
 app.use(function (err, req, res, next) {
-	// set locals, only providing error in development
-	res.locals.message = err.message;
-	res.locals.error = req.app.get('env') === 'development' ? err : {};
-	
-	// render the error page
-	res.status(err.status || 500);
-	res.render('error');
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
 });
 
 module.exports = app;
