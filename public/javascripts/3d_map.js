@@ -22,11 +22,11 @@
 
     //3209408 //主厂房一层
     //3209771 //主厂房三层
-    //3209044  //base
     //3209377  生活消防水泵房建筑一层
     //3209332 生产废水及生活污水处理站建筑 F1
     //3209099 化学建筑一层
     var DataName = {
+        3209044: 'huashuichejian',//base
         3209098: 'huashuichejian-1', //化学建筑
         3209331: 'huashuichejian-2', //生产废水及生活污水处理站建筑
         3209376: 'huashuichejian-3', //生活消防水泵房
@@ -48,10 +48,6 @@
                 }
             }
         }
-        // if (msg.sbms === '设备描述1') {
-        //     tryAddOverlay(msg)
-        // }
-
     }
 
     function tryAddOverlay(msg, qyms) {
@@ -62,28 +58,28 @@
 
     //绘制标志的方法
     function editOverlay(msg) {
-        var piont = map.unoffset(msg.piont.substring(0, msg.piont.indexOf(',')), msg.piont.substring(msg.piont.indexOf(',') + 1));
+        var point = map.unoffset(msg.point.substring(0, msg.point.indexOf(',')), msg.point.substring(msg.point.indexOf(',') + 1));
         if (document.getElementById(msg.sbms) === null) {
             console.log('==添加标记==');
-            addOverlay(piont, msg)
+            addOverlay(point, msg)
         } else {
-            changeTips(msg, piont)
+            changeTips(msg, point)
         }
     }
 
-    function changeTips(msg, piont) {
+    function changeTips(msg, point) {
         if (document.getElementById(msg.sbms + "tips") != null) {
-            console.log(msg.piont);
+            console.log(msg.point);
             document.getElementById(msg.sbms + "tips").getElementsByTagName('div')[0].innerText = allOverlay[msg.sbms].position
         }
-        allOverlay[msg.sbms].position = {x: piont.x + Math.random() * 100, y: piont.y + Math.random() * 10};
+        allOverlay[msg.sbms].position = {x: point.x + Math.random() * 100, y: point.y + Math.random() * 10};
         clearInterval(AddOverlay);
     }
 
-    function addOverlay(piont, msg) {
+    function addOverlay(point, msg) {
         var overlay = map.addOverlay({
             url: '../images/search_marker.png',  //标志样式的存放地址
-            position: [piont.x + Math.random() * 100, piont.y + Math.random() * 10],  //标志要添加的位置坐标
+            position: [point.x + Math.random() * 100, point.y + Math.random() * 10],  //标志要添加的位置坐标
             size: [32, 32],  //标志的大小
             anchor: [0, 0],
             className: 'overlay-icon',
@@ -102,7 +98,7 @@
     }
 
     function getLayerTips(msg, e) {
-        layer.tips('<div>' + msg.piont + '</div>', '#' + e.targetDom.id, {
+        layer.tips('<div>'+ msg.point +'<br>'+ msg.name +'<br>'+ msg.rwms +'<br>'+ msg.deptname +'</div>', '#' + e.targetDom.id, {
             area: 'auto',
             maxWidth: '500px',
             skin: 'liu-tips-class',
@@ -131,8 +127,8 @@
             console.log('==结束这个监听楼层变化的轮循==');
             clearInterval(FloorControl);
         } catch (err) {
-            console.log('--监听楼层变化报错--' + err);
             set2dMap();
+            console.log('--监听楼层变化报错--' + err);
         }
     }
 
@@ -176,7 +172,7 @@
 
     //添加地图加载完成时的回调
     map.onLoad = function () {
-        // tryAddOverlay(piont);
+        // tryAddOverlay(point);
         set2dMap();
         console.log(map._buildingInfoList)
         buttons[0].onclick = function () {
