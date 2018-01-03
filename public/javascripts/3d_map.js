@@ -128,12 +128,13 @@
 
                 fayeMsg(message, e.to);
                 layer.closeAll('tips');
+	            set2dMap();
             });
             console.log('==结束这个监听楼层变化的轮循==');
             clearInterval(FloorControl);
         } catch (err) {
             console.log('--监听楼层变化报错--' + err);
-            set2dMap();
+            
         }
     }
 
