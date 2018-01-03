@@ -42,7 +42,6 @@
     });
 
     function fayeMsg(msg, id) {
-        msgID = id;
         if (DataName[id]) {
             for (var i = 0; i < msg.length; i++) {
                 if (msg[i].mapName == DataName[id]) {
@@ -126,7 +125,8 @@
                 console.log('--监听到一次楼层变化--' + e.from + '--' + e.to)
                 clearInterval(setSkew);
 
-                fayeMsg(message, e.to);
+                msgID = e.to;
+                set2dMap();
                 layer.closeAll('tips');
             });
             console.log('==结束这个监听楼层变化的轮循==');
@@ -154,7 +154,7 @@
     }
 
     function changeBuilding(id) {
-        fayeMsg(message, id);
+        msgID = id;
 
         set2dMap();
         clearInterval(FloorControl);
