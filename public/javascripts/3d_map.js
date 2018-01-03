@@ -13,7 +13,7 @@
 
     });
 
-    var msgID= 3209044;
+    var msgID = 3209044;
     var allOverlay = {};
     var AddOverlay;
     var FloorControl;
@@ -67,15 +67,6 @@
         }
     }
 
-    function changeTips(msg, point) {
-        if (document.getElementById(msg.sbms + "tips") != null) {
-            console.log(msg.point);
-            document.getElementById(msg.sbms + "tips").getElementsByTagName('div')[0].innerText = allOverlay[msg.sbms].position
-        }
-        allOverlay[msg.sbms].position = {x: point.x + Math.random() * 100, y: point.y + Math.random() * 10};
-        clearInterval(AddOverlay);
-    }
-
     function addOverlay(point, msg) {
         var overlay = map.addOverlay({
             url: '../images/search_marker.png',  //标志样式的存放地址
@@ -98,15 +89,24 @@
     }
 
     function getLayerTips(msg, e) {
-        layer.tips('<div>'+ msg.point +'<br>'+ msg.name +'<br>'+ msg.rwms +'<br>'+ msg.deptname +'</div>', '#' + e.targetDom.id, {
+        layer.tips('<div>经纬度: ' + msg.point + '<br>用户名: ' + msg.name + '<br>任务描述: ' + msg.rwms + '<br>部门名称: ' + msg.deptname + '</div>', '#' + e.targetDom.id, {
             area: 'auto',
-            maxWidth: '500px',
+            maxWidth: '800px',
             skin: 'liu-tips-class',
             time: false,
             closeBtn: 1,
             tips: [1, 'white'],
             id: e.targetDom.id + "tips"
         });
+    }
+
+    function changeTips(msg, point) {
+        if (document.getElementById(msg.sbms + "tips") != null) {
+            var element = document.getElementById(msg.sbms + "tips").getElementsByTagName('div')[0];
+            element.innerHTML = '<div>经纬度: ' + msg.point + '<br>用户名: ' + msg.name + '<br>任务描述: ' + msg.rwms + '<br>部门名称: ' + msg.deptname + '</div>';
+        }
+        allOverlay[msg.sbms].position = {x: point.x + Math.random() * 100, y: point.y + Math.random() * 10};
+        clearInterval(AddOverlay);
     }
 
     var BuildingControl = setInterval(function () {
