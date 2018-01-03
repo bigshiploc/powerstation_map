@@ -12,7 +12,7 @@
         styleTemplate: '../stylesheets/template.json',
 
     });
-    var message=[];
+
     var msgID= 3209044;
     var allOverlay = {};
     var AddOverlay;
@@ -37,7 +37,6 @@
     //faye接收数据
     var client = new Faye.Client('http://localhost:3000/faye');
     client.subscribe('/data', function (msg) {
-        message = msg;
         fayeMsg(msg, msgID)
     });
 
