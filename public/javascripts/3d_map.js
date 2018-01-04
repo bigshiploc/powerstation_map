@@ -13,14 +13,16 @@
 
     });
 
-    var msgID = 3209044;
-    var message;
-    var currentDisplay;
-    var allOverlay = {};
-    var AddOverlay;
-    var FloorControl;
-    var setSkew;
-    var buttons = document.getElementsByClassName('btn');
+    var MAP_ID = 3209044;
+    var BUG_DATA;
+    var TERMINAL_DATA;
+    var BUILDING_NAME;
+    var ALL_OVERLAY = {};
+    var ADD_OVERLAY;
+    var FLOOR_CONTROL;
+    var SET_SKEW;
+    var SKEW_BUTTONS = document.getElementsByClassName('btn');
+    var NUM = 0;
 
     //3209408 //主厂房一层
     //3209771 //主厂房三层
@@ -39,35 +41,29 @@
     //faye接收数据
     var client = new Faye.Client('http://localhost:3000/faye');
     client.subscribe('/data', function (msg) {
-        // console.log(msg)
-        message = JSON.parse(msg.abnormalData);
-        changeLayerAlert(JSON.parse(msg.abnormalData))
-        // fayeMsg(msg.terminalData.data, msgID)
+        BUG_DATA = msg.abnormalData;
+        TERMINAL_DATA = msg.terminalData.data;
+        NUM =0;
+
+        console.log(msg)
+        changeLayerAlert(msg.abnormalData);
+        fayeMsg(msg.terminalData.data, MAP_ID)
     });
 
     function fayeMsg(msg, id) {
-        console.log(msg)
-        if (DataName[id]) {
-            for (var i = 0; i < msg.length; i++) {
-                if (msg[i].mapName == DataName[id]) {
-                    tryAddOverlay(msg[i])
-                }
-            }
+        if (DataName[id]&&msg[NUM].mapName == DataName[id]) {
+            editOverlay(msg[NUM])
         }
-    }
-
-    function tryAddOverlay(msg, qyms) {
-        AddOverlay = setInterval(function () {
-            editOverlay(msg);
-        }, 1000)
     }
 
     //绘制标志的方法
     function editOverlay(msg) {
         var point = map.unoffset(msg.point.substring(0, msg.point.indexOf(',')), msg.point.substring(msg.point.indexOf(',') + 1));
-        if (document.getElementById(msg.sbms) === null) {
+        if (document.getElementById('overlay_'+msg.yhxtm) === null) {
             console.log('==添加标记==');
-            addOverlay(point, msg)
+            ADD_OVERLAY = setInterval(function () {
+                addOverlay(point, msg)
+            }, 100)
         } else {
             changeTips(msg, point)
         }
@@ -81,17 +77,18 @@
             anchor: [0, 0],
             className: 'overlay-icon',
         });
-        clearInterval(AddOverlay);
+        clearInterval(ADD_OVERLAY);
+        nextMsg();
         setOverlay(overlay, msg)
     }
 
     function setOverlay(overlay, msg) {
-        overlay.targetDom.id = msg.sbms;
+        overlay.targetDom.id = 'overlay_'+msg.yhxtm;
         overlay.on("click", function (e) {
             getLayerTips(msg, e)
         });
 
-        allOverlay[msg.sbms] = overlay;
+        ALL_OVERLAY[msg.yhxtm] = overlay;
     }
 
     function getLayerTips(msg, e) {
@@ -107,12 +104,19 @@
     }
 
     function changeTips(msg, point) {
-        if (document.getElementById(msg.sbms + "tips") != null) {
-            var element = document.getElementById(msg.sbms + "tips").getElementsByTagName('div')[0];
+        if (document.getElementById(msg.yhxtm + "tips") != null) {
+            var element = document.getElementById(msg.yhxtm + "tips").getElementsByTagName('div')[0];
             element.innerHTML = '<div>经纬度: ' + msg.point + '<br>用户名: ' + msg.name + '<br>任务描述: ' + msg.rwms + '<br>部门名称: ' + msg.deptname + '</div>';
         }
-        allOverlay[msg.sbms].position = {x: point.x + Math.random() * 100, y: point.y + Math.random() * 10};
-        clearInterval(AddOverlay);
+        ALL_OVERLAY[msg.yhxtm].position = {x: point.x + Math.random() * 100, y: point.y + Math.random() * 10};
+        nextMsg();
+    }
+
+    function nextMsg() {
+        NUM++;
+        if(NUM<TERMINAL_DATA.length-1){
+            fayeMsg(TERMINAL_DATA,MAP_ID)
+        }
     }
 
     var BuildingControl = setInterval(function () {
@@ -124,16 +128,15 @@
         try {
             map.floorControl.on('change', function (e) {
                 console.log('--监听到一次楼层变化--' + e.from + '--' + e.to)
-                msgID = e.to;
+                MAP_ID = e.to;
 
-                clearInterval(setSkew);
+                clearInterval(SET_SKEW);
 
                 set2dMap();
                 layer.closeAll('tips');
-                set2dMap();
             });
             console.log('==结束这个监听楼层变化的轮循==');
-            clearInterval(FloorControl);
+            clearInterval(FLOOR_CONTROL);
         } catch (err) {
             console.log('--监听楼层变化报错--' + err);
         }
@@ -146,6 +149,13 @@
                 console.log('--监听到一次建筑物变化--' + e.from + '--' + e.to)
                 layer.closeAll('tips');
                 changeBuilding(e.to)
+
+                // while (i<5)
+                // {
+                //     x=x + "The number is " + i + "<br>";
+                //     i++;
+                // }
+                console.log(ALL_OVERLAY)
             });
             console.log('==结束这个监听建筑物变化的轮循==');
             clearInterval(BuildingControl);
@@ -155,13 +165,12 @@
     }
 
     function changeBuilding(id) {
-        msgID = id;
+        MAP_ID = id;
 
-        clearInterval(setSkew);
-        clearInterval(FloorControl);
+        clearInterval(FLOOR_CONTROL);
         set2dMap();
         if (id !== 3209044) {
-            FloorControl = setInterval(function () {
+            FLOOR_CONTROL = setInterval(function () {
                 getFloorControl();
             }, 1000);
         }
@@ -169,12 +178,12 @@
 
     //初始化地图时设置为2d
     function set2dMap() {
-        clearInterval(setSkew);
-        buttons[0].innerText = '切换3d';
-        setSkew = setInterval(function () {
+        clearInterval(SET_SKEW);
+        SKEW_BUTTONS[0].innerText = '切换3d';
+        SET_SKEW = setInterval(function () {
             console.log('切换2d---------------')
             map.skewTo(0);
-            clearInterval(setSkew)
+            clearInterval(SET_SKEW)
         }, 1000)
     }
 
@@ -183,13 +192,13 @@
         // tryAddOverlay(point);
         set2dMap();
         console.log(map._buildingInfoList)
-        buttons[0].onclick = function () {
-            if (buttons[0].innerText == '切换2d') {
+        SKEW_BUTTONS[0].onclick = function () {
+            if (SKEW_BUTTONS[0].innerText == '切换2d') {
                 map.skewTo(0);
-                buttons[0].innerText = '切换3d';
+                SKEW_BUTTONS[0].innerText = '切换3d';
             } else {
                 map.skewTo(60);
-                buttons[0].innerText = '切换2d';
+                SKEW_BUTTONS[0].innerText = '切换2d';
             }
 
         };
@@ -199,20 +208,20 @@
     function changeLayerAlert(msg) {
         if (document.getElementById("layer-alert") != null) {
             var element = document.getElementById("layer-alert").getElementsByTagName('div')[0];
-            element.innerHTML = getAlertData(currentDisplay, msg);
+            element.innerHTML = getAlertData(BUILDING_NAME, msg);
         }
     }
 
-    function getAlertData(name, message) {
+    function getAlertData(name, BUG_DATA) {
         var alertData = '';
-        for (var i = 0; i < message.qxdata.length; i++) {
-            if (name == message.qxdata[i].equipmentname) {
-                alertData = '<div><div>缺陷: </div>缺陷现象: ' + message.qxdata[i].qxapp + '<br>缺陷状态: ' + message.qxdata[i].qxstatus + '<br>发现时间: ' + message.qxdata[i].findtime + '<br>发现人: ' + message.qxdata[i].finder + '</div>';
+        for (var i = 0; i < BUG_DATA.qxdata.length; i++) {
+            if (name == BUG_DATA.qxdata[i].equipmentname) {
+                alertData = '<div><div>缺陷: </div>缺陷现象: ' + BUG_DATA.qxdata[i].qxapp + '<br>缺陷状态: ' + BUG_DATA.qxdata[i].qxstatus + '<br>发现时间: ' + BUG_DATA.qxdata[i].findtime + '<br>发现人: ' + BUG_DATA.qxdata[i].finder + '</div>';
             }
         }
-        for (var y = 0; y < message.ycdata.length; y++) {
-            if (name == message.ycdata[y].equipmentname) {
-                alertData += '<br><div><div>异常: </div>上限值: ' + message.ycdata[y].sxz + '<br>下限值: ' + message.ycdata[y].xxz + '<br>发现时间: ' + message.ycdata[y].findtime + '<br>发现人: ' + message.ycdata[y].finder + '</div>';
+        for (var y = 0; y < BUG_DATA.ycdata.length; y++) {
+            if (name == BUG_DATA.ycdata[y].equipmentname) {
+                alertData += '<br><div><div>异常: </div>上限值: ' + BUG_DATA.ycdata[y].sxz + '<br>下限值: ' + BUG_DATA.ycdata[y].xxz + '<br>发现时间: ' + BUG_DATA.ycdata[y].findtime + '<br>发现人: ' + BUG_DATA.ycdata[y].finder + '</div>';
             }
         }
         return alertData
@@ -223,13 +232,13 @@
         var feature = e.feature;
 
         console.log(e);
-        if (feature.parent.name === 'Area'&&message) {
+        if (feature.parent.name === 'Area'&&BUG_DATA) {
             console.log('--这里是一个回调--');
-            layer.alert('<div>' + getAlertData(feature.properties.display + '</div>', message), {
+            layer.alert('<div>' + getAlertData(feature.properties.display + '</div>', BUG_DATA), {
                 skin: 'layui-layer-molv' //样式类名
                 , closeBtn: 0, id: 'layer-alert'
             });
-            currentDisplay = feature.properties.display;
+            BUILDING_NAME = feature.properties.display;
             map.setColor(feature.parent, 'id', feature.id, 0xff0000);
         }
     };
