@@ -45,12 +45,12 @@
         TERMINAL_DATA = msg.terminalData.data;
         NUM =0;
 
+        console.log(msg)
         changeLayerAlert(msg.abnormalData);
         fayeMsg(msg.terminalData.data, MAP_ID)
     });
 
     function fayeMsg(msg, id) {
-        console.log(msg)
         if (DataName[id]&&msg[NUM].mapName == DataName[id]) {
             editOverlay(msg[NUM])
         }
@@ -114,7 +114,6 @@
 
     function nextMsg() {
         NUM++;
-        console.log(NUM)
         if(NUM<TERMINAL_DATA.length-1){
             fayeMsg(TERMINAL_DATA,MAP_ID)
         }
@@ -135,7 +134,6 @@
 
                 set2dMap();
                 layer.closeAll('tips');
-                set2dMap();
             });
             console.log('==结束这个监听楼层变化的轮循==');
             clearInterval(FLOOR_CONTROL);
@@ -151,6 +149,13 @@
                 console.log('--监听到一次建筑物变化--' + e.from + '--' + e.to)
                 layer.closeAll('tips');
                 changeBuilding(e.to)
+
+                // while (i<5)
+                // {
+                //     x=x + "The number is " + i + "<br>";
+                //     i++;
+                // }
+                console.log(ALL_OVERLAY)
             });
             console.log('==结束这个监听建筑物变化的轮循==');
             clearInterval(BuildingControl);
@@ -162,7 +167,6 @@
     function changeBuilding(id) {
         MAP_ID = id;
 
-        clearInterval(SET_SKEW);
         clearInterval(FLOOR_CONTROL);
         set2dMap();
         if (id !== 3209044) {
