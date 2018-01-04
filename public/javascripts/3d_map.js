@@ -37,6 +37,9 @@
     //faye接收数据
     var client = new Faye.Client('http://localhost:3000/faye');
     client.subscribe('/data', function (msg) {
+        
+        console.log(new Date() + '----***----' + JSON.stringify(msg));
+        
         fayeMsg(msg, msgID)
     });
 
