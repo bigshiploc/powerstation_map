@@ -43,14 +43,14 @@ function getAndSendData() {
 	console.log('函数的入口');
 	getData.getAllData(function (data) {
 		console.log(new Date() + '----1-----' + JSON.stringify(data));
-		// getData.fayeSendDdata(data);
+		getData.fayeSendDdata(data);
 	});
 	
 	setInterval(function () {
 		getData.getAllData(function (data) {
 			console.log(new Date() + '----2----' + JSON.stringify(data));
-			// getData.clearFunction();
-			// getData.fayeSendDdata(data);
+			getData.clearFunction();
+			getData.fayeSendDdata(data);
 		});
 	}, 5 * 1000);
 }
