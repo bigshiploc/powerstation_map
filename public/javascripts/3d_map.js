@@ -14,6 +14,8 @@
     });
 
     var msgID = 3209044;
+    var message;
+    var currentDisplay;
     var allOverlay = {};
     var AddOverlay;
     var FloorControl;
@@ -37,10 +39,14 @@
     //faye接收数据
     var client = new Faye.Client('http://localhost:3000/faye');
     client.subscribe('/data', function (msg) {
-        fayeMsg(msg, msgID)
+        // console.log(msg)
+        message = JSON.parse(msg.abnormalData);
+        changeLayerAlert(JSON.parse(msg.abnormalData))
+        // fayeMsg(msg.terminalData.data, msgID)
     });
 
     function fayeMsg(msg, id) {
+        console.log(msg)
         if (DataName[id]) {
             for (var i = 0; i < msg.length; i++) {
                 if (msg[i].mapName == DataName[id]) {
@@ -124,7 +130,7 @@
 
                 set2dMap();
                 layer.closeAll('tips');
-	            set2dMap();
+                set2dMap();
             });
             console.log('==结束这个监听楼层变化的轮循==');
             clearInterval(FloorControl);
@@ -189,17 +195,41 @@
         };
     };
 
+
+    function changeLayerAlert(msg) {
+        if (document.getElementById("layer-alert") != null) {
+            var element = document.getElementById("layer-alert").getElementsByTagName('div')[0];
+            element.innerHTML = getAlertData(currentDisplay, msg);
+        }
+    }
+
+    function getAlertData(name, message) {
+        var alertData = '';
+        for (var i = 0; i < message.qxdata.length; i++) {
+            if (name == message.qxdata[i].equipmentname) {
+                alertData = '<div><div>缺陷: </div>缺陷现象: ' + message.qxdata[i].qxapp + '<br>缺陷状态: ' + message.qxdata[i].qxstatus + '<br>发现时间: ' + message.qxdata[i].findtime + '<br>发现人: ' + message.qxdata[i].finder + '</div>';
+            }
+        }
+        for (var y = 0; y < message.ycdata.length; y++) {
+            if (name == message.ycdata[y].equipmentname) {
+                alertData += '<br><div><div>异常: </div>上限值: ' + message.ycdata[y].sxz + '<br>下限值: ' + message.ycdata[y].xxz + '<br>发现时间: ' + message.ycdata[y].findtime + '<br>发现人: ' + message.ycdata[y].finder + '</div>';
+            }
+        }
+        return alertData
+    }
+
     //给地图添加点击事件（以后要做点击建筑物或终端显示其基本信息）
     map.onClick = function (e) {
         var feature = e.feature;
 
         console.log(e);
-        if (feature.parent.name === 'Area') {
+        if (feature.parent.name === 'Area'&&message) {
             console.log('--这里是一个回调--');
-            layer.alert(JSON.stringify(e.point), {
+            layer.alert('<div>' + getAlertData(feature.properties.display + '</div>', message), {
                 skin: 'layui-layer-molv' //样式类名
-                , closeBtn: 0
+                , closeBtn: 0, id: 'layer-alert'
             });
+            currentDisplay = feature.properties.display;
             map.setColor(feature.parent, 'id', feature.id, 0xff0000);
         }
     };
