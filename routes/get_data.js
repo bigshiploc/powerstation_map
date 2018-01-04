@@ -14,33 +14,42 @@ function GetData() {
 	this.getAllData = function (cb) {
 		console.log('------开始请求api数据-------');
 		http.get('http://www.chasingeda.com:7777/appsoft7/appservlet?requesttype=esightmapinfo', function (response) {
+			
+			var dataArr = [];
+			
 			response.on('data', function (result) {
-				
+				dataArr.push(result.toString());
+			});
+			
+			response.on('end', function () {
+				var terminalData = '';
+				for(var i=0;i<dataArr.length;i++){
+					terminalData += dataArr[i];
+				}
+				var terminalData1 = JSON.parse(terminalData);
 				try {
-					var terminalData = JSON.parse(result.toString());
-					
-					for (var i = 0; i < terminalData.data.length; i++) {
-						if (terminalData.data.length != 0 && terminalData.data[i].mapName in dataName) {
-							terminalData.data[i].mapName = dataName[terminalData.data[i].mapName]
+					for (var i = 0; i < terminalData1.data.length; i++) {
+						if (terminalData1.data.length != 0 && terminalData1.data[i].mapName in dataName) {
+							terminalData1.data[i].mapName = dataName[terminalData1.data[i].mapName]
 						}
 					}
-
-					data.terminalData = terminalData;
 					
-					// console.log(JSON.stringify(data))
+					data.terminalData = terminalData1;
 					
 				} catch (err) {
 					console.log('--获取终端位置信息的API发生错误--' + err)
 				}
-				
-				http.get('http://www.chasingeda.com:7777/appsoft7/appservlet?requesttype=assetmapstatus&date=2017-12-12', function (response) {
-					response.on('data', function (result) {
-
-						data.abnormalData = JSON.parse(result.toString());
-						cb(data)
-					})
+			});
+			
+			
+			http.get('http://www.chasingeda.com:7777/appsoft7/appservlet?requesttype=assetmapstatus&date=2017-12-12', function (response) {
+				response.on('data', function (result) {
+					
+					data.abnormalData = JSON.parse(result.toString());
+					cb(data)
 				})
 			})
+			
 		})
 	};
 	

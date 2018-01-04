@@ -52,7 +52,7 @@ function getAndSendData() {
 			getData.clearFunction();
 			getData.fayeSendDdata(data);
 		});
-	}, 5 * 1000);
+	}, 20 * 1000);
 }
 
 
