@@ -125,6 +125,12 @@
 
     //监听楼层的方法
     function getFloorControl() {
+	    var allOverlay = Object.values(ALL_OVERLAY);
+	    while (allOverlay.length!=0)
+	    {
+		    console.log(allOverlay.length)
+		    map.removeOverlay(allOverlay.shift())
+	    }
         try {
             map.floorControl.on('change', function (e) {
                 console.log('--监听到一次楼层变化--' + e.from + '--' + e.to)
@@ -150,12 +156,8 @@
                 layer.closeAll('tips');
                 changeBuilding(e.to)
 
-                // while (i<5)
-                // {
-                //     x=x + "The number is " + i + "<br>";
-                //     i++;
-                // }
-                console.log(ALL_OVERLAY)
+                
+                console.log()
             });
             console.log('==结束这个监听建筑物变化的轮循==');
             clearInterval(BuildingControl);
