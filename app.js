@@ -42,13 +42,13 @@ getAndSendData();
 function getAndSendData() {
 	console.log('函数的入口');
 	getData.getAllData(function (data) {
-		console.log(new Date() + '----1-----' + JSON.stringify(data));
+		// console.log(new Date() + '----1-----' + data);
 		getData.fayeSendDdata(data);
 	});
 	
 	setInterval(function () {
 		getData.getAllData(function (data) {
-			console.log(new Date() + '----2----' + JSON.stringify(data));
+			// console.log(new Date() + '----2----' + data);
 			getData.clearFunction();
 			getData.fayeSendDdata(data);
 		});

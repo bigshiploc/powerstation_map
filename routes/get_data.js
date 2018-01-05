@@ -23,7 +23,7 @@ function GetData() {
 			
 			response.on('end', function () {
 				var terminalData = '';
-				for(var i=0;i<dataArr.length;i++){
+				for (var i = 0; i < dataArr.length; i++) {
 					terminalData += dataArr[i];
 				}
 				var terminalData1 = JSON.parse(terminalData);
