@@ -17,7 +17,7 @@
     var MAP_ID = 3209044;
     var BUG_DATA;
     var TERMINAL_DATA;
-    var BUILDING_NAME;
+    var BUILDING_INFO;
     var ALL_OVERLAY = {};
     var ADD_OVERLAY;
     var FLOOR_CONTROL;
@@ -61,7 +61,7 @@
     function editOverlay(msg) {
         var point = map.unoffset(msg.point.substring(0, msg.point.indexOf(',')), msg.point.substring(msg.point.indexOf(',') + 1));
         if (document.getElementById('overlay_'+msg.yhxtm) === null) {
-            console.log('==添加标记==');
+            console.log('==添加标记=='+NUM);
             ADD_OVERLAY = setInterval(function () {
                 addOverlay(point, msg)
             }, 100)
@@ -115,7 +115,7 @@
 
     function nextMsg() {
         NUM++;
-        if(NUM<TERMINAL_DATA.length-1){
+        if(NUM<=TERMINAL_DATA.length-1){
             fayeMsg(TERMINAL_DATA,MAP_ID)
         }
     }
@@ -212,7 +212,7 @@
     function changeLayerAlert(msg) {
         if (document.getElementById("layer-alert") != null) {
             var element = document.getElementById("layer-alert").getElementsByTagName('div')[0];
-            element.innerHTML = getAlertData(BUILDING_NAME, msg);
+            element.innerHTML = getAlertData(BUILDING_INFO, msg);
         }
     }
 
@@ -242,7 +242,7 @@
                 skin: 'layui-layer-molv' //样式类名
                 , closeBtn: 0, id: 'layer-alert'
             });
-            BUILDING_NAME = feature.properties;
+            BUILDING_INFO = feature.properties;
             map.setColor(feature.parent, 'id', feature.id, 0xff0000);
         }
     };
