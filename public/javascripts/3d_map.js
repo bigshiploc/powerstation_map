@@ -217,14 +217,14 @@
     }
 
     function getAlertData(name, BUG_DATA) {
-        var alertData = '';
+        var alertData = '<div>设备名: '+ name.display +'<br>设备id: '+ name.data_id +'</div>';
         for (var i = 0; i < BUG_DATA.qxdata.length; i++) {
-            if (name == BUG_DATA.qxdata[i].equipmentname) {
-                alertData = '<div><div>缺陷: </div>缺陷现象: ' + BUG_DATA.qxdata[i].qxapp + '<br>缺陷状态: ' + BUG_DATA.qxdata[i].qxstatus + '<br>发现时间: ' + BUG_DATA.qxdata[i].findtime + '<br>发现人: ' + BUG_DATA.qxdata[i].finder + '</div>';
+            if (name.display == BUG_DATA.qxdata[i].equipmentname) {
+                alertData += '<div><div>缺陷: </div>缺陷现象: ' + BUG_DATA.qxdata[i].qxapp + '<br>缺陷状态: ' + BUG_DATA.qxdata[i].qxstatus + '<br>发现时间: ' + BUG_DATA.qxdata[i].findtime + '<br>发现人: ' + BUG_DATA.qxdata[i].finder + '</div>';
             }
         }
         for (var y = 0; y < BUG_DATA.ycdata.length; y++) {
-            if (name == BUG_DATA.ycdata[y].equipmentname) {
+            if (name.display == BUG_DATA.ycdata[y].equipmentname) {
                 alertData += '<br><div><div>异常: </div>上限值: ' + BUG_DATA.ycdata[y].sxz + '<br>下限值: ' + BUG_DATA.ycdata[y].xxz + '<br>发现时间: ' + BUG_DATA.ycdata[y].findtime + '<br>发现人: ' + BUG_DATA.ycdata[y].finder + '</div>';
             }
         }
@@ -238,11 +238,11 @@
         console.log(e);
         if (feature.parent.name === 'Area'&&BUG_DATA) {
             console.log('--这里是一个回调--');
-            layer.alert('<div>' + getAlertData(feature.properties.display + '</div>', BUG_DATA), {
+            layer.alert('<div>' + getAlertData(feature.properties, BUG_DATA) +'</div>', {
                 skin: 'layui-layer-molv' //样式类名
                 , closeBtn: 0, id: 'layer-alert'
             });
-            BUILDING_NAME = feature.properties.display;
+            BUILDING_NAME = feature.properties;
             map.setColor(feature.parent, 'id', feature.id, 0xff0000);
         }
     };
