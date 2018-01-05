@@ -125,12 +125,6 @@
 
     //监听楼层的方法
     function getFloorControl() {
-	    var allOverlay = Object.values(ALL_OVERLAY);
-	    while (allOverlay.length!=0)
-	    {
-		    console.log(allOverlay.length)
-		    map.removeOverlay(allOverlay.shift())
-	    }
         try {
             map.floorControl.on('change', function (e) {
                 console.log('--监听到一次楼层变化--' + e.from + '--' + e.to)
@@ -155,9 +149,6 @@
                 console.log('--监听到一次建筑物变化--' + e.from + '--' + e.to)
                 layer.closeAll('tips');
                 changeBuilding(e.to)
-
-                
-                console.log()
             });
             console.log('==结束这个监听建筑物变化的轮循==');
             clearInterval(BuildingControl);
@@ -185,8 +176,18 @@
         SET_SKEW = setInterval(function () {
             console.log('切换2d---------------')
             map.skewTo(0);
+            rmAllOverlay();
             clearInterval(SET_SKEW)
-        }, 1000)
+        }, 1000);
+    }
+
+    function rmAllOverlay() {
+        var allOverlay = Object.values(ALL_OVERLAY);
+        while (allOverlay.length!=0)
+        {
+            console.log(allOverlay.length)
+            map.removeOverlay(allOverlay.shift())
+        }
     }
 
     //添加地图加载完成时的回调
