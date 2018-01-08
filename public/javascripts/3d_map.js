@@ -63,10 +63,12 @@
     var DataName = {
         3209044: 'huashuichejian',//base
         3209098: 'huashuichejian-1', //化学建筑
-        3209331: 'huashuichejian-2', //生产废水及生活污水处理站建筑
+        3209331: 'shengchanfeishuijishenghuowushuichulizhan', //生产废水及生活污水处理站建筑
         3209376: 'huashuichejian-3', //生活消防水泵房
         3209407: 'huashuichejian-4', //主厂房
-        3209679: 'huashuichejian-5' //主厂房二层
+        3209679: 'huashuichejian-5', //主厂房二层
+        3209408: 'zhuchangfang0m-1', //主厂房一层
+        3209771: 'zhuchangfang12.6m-3' //主厂房三层
     };
 
     //faye接收数据
@@ -271,11 +273,10 @@
     }
 
     function getAlertData(name, msg) {
-        if(msg == undefined){
-            return;
-        }
-        
         var alertData = '<div>设备名: ' + name.display + '<br>设备id: ' + name.data_id + '</div>';
+        if(msg == undefined){
+            return alertData;
+        }
         for (var i = 0; i < msg.qxdata.length; i++) {
             if (name.display == msg.qxdata[i].equipmentname) {
                 alertData += '<div><div>缺陷: </div>缺陷现象: ' + msg.qxdata[i].qxapp + '<br>缺陷状态: ' + msg.qxdata[i].qxstatus + '<br>发现时间: ' + msg.qxdata[i].findtime + '<br>发现人: ' + msg.qxdata[i].finder + '</div>';

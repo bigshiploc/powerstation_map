@@ -6,10 +6,13 @@ function GetData() {
 	
 	var data = {};
 	var sendData;
-	
-	var dataName = {
-		'化水车间': 'huashuichejian'
-	};
+
+    var dataName = {
+        '化水车间': 'huashuichejian',
+        '生产废水及生活污水处理站': 'shengchanfeishuijishenghuowushuichulizhan',
+        '主厂房0m-1': 'zhuchangfang0m-1',
+        '主厂房12.6m-3': 'zhuchangfang12.6m-3'
+    };
 	
 	this.getAllData = function (cb) {
 		console.log('------开始请求api数据-------');
