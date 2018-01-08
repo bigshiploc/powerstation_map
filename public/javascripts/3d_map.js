@@ -100,12 +100,15 @@
             if (features[i].properties.display && features[i].properties.display == msg) {
                 map.setColor(features[i].parent, 'id', features[i].id, color);
             }
+            map.resetColor(features[i].parent, 'id', features[i].id)
         }
     }
 
     function fayeMsg(msg, id) {
         if (DataName[id] && msg[NUM].mapName == DataName[id]) {
             editOverlay(msg[NUM])
+        }else {
+            nextMsg();
         }
     }
 
@@ -268,6 +271,10 @@
     }
 
     function getAlertData(name, msg) {
+        if(msg == undefined){
+            return;
+        }
+        
         var alertData = '<div>设备名: ' + name.display + '<br>设备id: ' + name.data_id + '</div>';
         for (var i = 0; i < msg.qxdata.length; i++) {
             if (name.display == msg.qxdata[i].equipmentname) {
@@ -287,7 +294,7 @@
         var feature = e.feature;
 
         console.log(e);
-        if (feature.parent.name === 'Area' && BUG_DATA) {
+        if (feature.parent.name === 'Area') {
             console.log('--这里是一个回调--');
             layer.alert('<div>' + getAlertData(feature.properties, BUG_DATA) + '</div>', {
                 skin: 'layui-layer-molv' //样式类名

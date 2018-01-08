@@ -2,9 +2,6 @@ var express = require('express');
 var router = express.Router();
 
 var path = require('path');
-var http = require('http');
-
-var faye = require('faye');
 
 
 router.get('/', function (req, res, next) {

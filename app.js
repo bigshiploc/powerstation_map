@@ -6,7 +6,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 
-var GetData = require('./routes/get_data');
 var map_3d = require('./routes/3d_map');
 
 var app = express();
@@ -28,28 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', map_3d);
 
-
-//获取数据并发送数据
-
-var getData = new GetData();
-
-getAndSendData();
-
-function getAndSendData() {
-	console.log('函数的入口');
-	getData.getAllData(function (data) {
-		// console.log(new Date() + '----1-----' + data);
-		getData.fayeSendDdata(data);
-	});
-	
-	setInterval(function () {
-		getData.getAllData(function (data) {
-			// console.log(new Date() + '----2----' + data);
-			getData.clearFunction();
-			getData.fayeSendDdata(data);
-		});
-	}, 20 * 1000);
-}
+require('./routes/get_data');
 
 
 // catch 404 and forward to error handler

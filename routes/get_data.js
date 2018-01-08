@@ -67,4 +67,26 @@ function GetData() {
 	};
 }
 
+//获取数据并发送数据
+
+var getData = new GetData();
+
+getAndSendData();
+
+function getAndSendData() {
+    console.log('函数的入口');
+    getData.getAllData(function (data) {
+        // console.log(new Date() + '----1-----' + data);
+        getData.fayeSendDdata(data);
+    });
+
+    setInterval(function () {
+        getData.getAllData(function (data) {
+            // console.log(new Date() + '----2----' + data);
+            getData.clearFunction();
+            getData.fayeSendDdata(data);
+        });
+    }, 20 * 1000);
+}
+
 module.exports = GetData;
